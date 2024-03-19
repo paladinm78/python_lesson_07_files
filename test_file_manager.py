@@ -1,5 +1,6 @@
 import file_manager as fm
 import os
+import shutil
 
 
 def test_make_folder():
@@ -92,3 +93,40 @@ def test_change_work_directory():
 
     fm.change_work_directory('..')
     fm.remove_file_or_folder(test_change_dir)
+
+
+def test_save_current_dir():
+
+    test_new_dir = 'test_save_current_dir_new'
+    test_dir = 'test_save_current_dir'
+    test_file = 'test_save_current_file.txt'
+
+    if os.path.exists(test_new_dir):
+        shutil.rmtree(test_new_dir)
+
+    os.makedirs(test_new_dir, exist_ok=True)
+    os.chdir(test_new_dir)
+
+    os.makedirs(test_dir, exist_ok=True)
+
+    save_current_dir_message = fm.save_current_dir(test_file)
+
+    files_list = []
+    folders_list = []
+    contents = os.listdir()
+    for item in contents:
+        if os.path.isdir(item):
+            folders_list.append(item)
+        if os.path.isfile(item):
+            files_list.append(item)
+
+    with open(test_file, 'r') as f:
+        files_line = f.readline().rstrip()
+        folders_line = f.readline()
+
+    assert save_current_dir_message == f"В файл {test_file} сохранено {len(files_list)} файлов и {len(folders_list)} папок"
+    assert files_line == 'files: '+', '.join(files_list)
+    assert folders_line == 'dirs: ' + ', '.join(folders_list)
+
+    os.chdir('..')
+    shutil.rmtree(test_new_dir)
