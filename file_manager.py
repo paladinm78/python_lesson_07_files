@@ -82,6 +82,19 @@ def change_work_directory(new_directory):
         return f"Ошибка при смене директории: {e}"
 
 
+def save_current_dir(file_name='listdir.txt'):
+    with open(file_name, 'w') as f:
+        f.write('files: ')
+        files_list = list_dir(show_folders=False, show_files=True)
+        f.write(', '.join(files_list))
+        files_count = len(files_list)
+        f.write('\n')
+        f.write('dirs: ')
+        folders_list = list_dir(show_folders=True, show_files=False)
+        f.write(', '.join(folders_list))
+        folders_count = len(folders_list)
+        return f"В файл {file_name} сохранено {files_count} файлов и {folders_count} папок"
+
 
 def show_file_manager_menu():
     print()
@@ -94,6 +107,7 @@ def show_file_manager_menu():
     print('4. посмотреть содержимого рабочей директории')
     print('5. посмотреть только папки')
     print('6. посмотреть только файлы')
+    print('7. сохранить содержимое рабочей директории в файл')
     print('8. просмотр информации об операционной системе')
     print('9. смена рабочей директории')
     print('10. выход')
@@ -143,6 +157,10 @@ def run_file_manager():
             objets_list = list_dir(show_folders=False, show_files=True)
             for item in objets_list:
                 print(item)
+
+        elif choice == '7':
+            print('Сохранить содержимое рабочей директории в файл')
+            print(save_current_dir())
 
         elif choice == '8':
             print('Просмотр информации об операционной системе')
